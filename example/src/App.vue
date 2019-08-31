@@ -83,70 +83,71 @@
   </div>
 </template>
 
-<script>
-import MediaStylePalette from '../../'
+<script lang="ts">
+import Vue from 'vue'
+import MediaStylePalette, { Color } from '../../'
 
-export default {
+export default Vue.extend({
   name: 'app',
-  data() {
+  data () {
     return {
       colors: {
         left: {
           primaryColor: '',
           secondaryColor: '',
-          backgroundColor: '',
+          backgroundColor: ''
         },
         right: {
           primaryColor: '',
           secondaryColor: '',
-          backgroundColor: '',
+          backgroundColor: ''
         },
         top: {
           primaryColor: '',
           secondaryColor: '',
-          backgroundColor: '',
+          backgroundColor: ''
         },
         bottom: {
           primaryColor: '',
           secondaryColor: '',
-          backgroundColor: '',
+          backgroundColor: ''
         }
       },
       imgSrc: '',
-      mediaStylePalette: new MediaStylePalette(),
+      mediaStylePalette: new MediaStylePalette()
     }
   },
   methods: {
-    setActive(position) {
+    setActive (position: 'left' | 'right' | 'top' | 'bottom') {
       for (const k in this.colors) {
         if (this.colors.hasOwnProperty(k)) {
           if (k === position) {
             this.$set(this.colors[k], 'active', 'active')
           } else {
-            this.$set(this.colors[k], 'active', '')
+            this.$set(this.colors[k as 'left' | 'right' | 'top' | 'bottom'], 'active', '')
           }
         }
       }
     },
-    a0(color) {
+    a0 (color: Color) {
       if (!color) return ''
       return `rgba(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]}, 0)`
     },
-    onImageSelected(e) {
+    onImageSelected (e: any) {
       const files = e.target.files
       if (files && files[0]) {
         const reader = new FileReader()
-        reader.onload = (e) => {
+        reader.onload = (e: any) => {
           this.imgSrc = e.target.result
         }
-        this.$refs.img.onload = () => {
+        (this.$refs.img as HTMLImageElement).onload = () => {
           this.mediaStylePalette
-            .from(this.$refs.img)
+            .from(this.$refs.img as HTMLImageElement)
           const v = [
             { n: 'left', d: -90 },
             { n: 'right', d: 90 },
             { n: 'top', d: 0 },
-            { n: 'bottom', d: 180 },
+            { n: 'bottom', d: 180 }
           ]
           for (const p of v) {
             this.mediaStylePalette
@@ -163,7 +164,7 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 <style>

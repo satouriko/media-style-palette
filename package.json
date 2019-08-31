@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "vue-cli-service serve",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@csstools/convert-colors": "^2.0.0",
@@ -14,12 +15,18 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-plugin-typescript": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "@vue/eslint-config-typescript": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "core-js": "^2.6.5",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "typescript": "^3.4.3",
     "vue": "^2.6.10",
+    "vue-class-component": "^7.0.2",
+    "vue-property-decorator": "^8.1.0",
     "vue-template-compiler": "^2.6.10"
   },
   "repository": {
@@ -31,24 +38,5 @@
   "bugs": {
     "url": "https://github.com/rikakomoe/Media-Style-Palette/issues"
   },
-  "homepage": "https://github.com/rikakomoe/Media-Style-Palette#readme",
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  }
+  "homepage": "https://github.com/rikakomoe/Media-Style-Palette#readme"
 }

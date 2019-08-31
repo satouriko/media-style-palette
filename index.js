@@ -1,5 +1,5 @@
 import * as Vibrant from 'node-vibrant'
-import { ensureColors, findBackgroundColor, findForegroundColor } from "./mediaStyleHelper"
+import { ensureColors, findBackgroundColor, findForegroundColor } from './mediaStyleHelper'
 import * as convert from '@csstools/convert-colors'
 
 export class MediaStylePalette {
@@ -7,7 +7,7 @@ export class MediaStylePalette {
   palette
   ref
 
-  constructor(option) {
+  constructor (option) {
     this.use(option)
     this.canvas = document.createElement('canvas')
     this.ctx = this.canvas.getContext('2d')
@@ -15,13 +15,13 @@ export class MediaStylePalette {
     this.canvas.height = this.option.maxDimension
   }
 
-  use(option) {
+  use (option) {
     if (option !== null && option !== undefined && typeof option !== 'object') {
       throw new TypeError('option is not an object')
     }
     this.option = Object.assign({
       maxDimension: 150,
-      direction: 180,
+      direction: 180
     }, this.option, option)
     if (typeof this.option.maxDimension !== 'number') {
       throw new TypeError('maxDimension is not a number')
@@ -34,7 +34,7 @@ export class MediaStylePalette {
     return this
   }
 
-  from(ref) {
+  from (ref) {
     if (!(ref instanceof HTMLImageElement)) {
       throw new TypeError('Input argument is not an HTMLImageElement')
     }
@@ -46,7 +46,7 @@ export class MediaStylePalette {
     return this
   }
 
-  async getPalette() {
+  async getPalette () {
     if (this.palette) {
       return this.palette
     }
