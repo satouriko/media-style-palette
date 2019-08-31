@@ -174,11 +174,11 @@ export default Vue.extend({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 
 input {
-  margin: 10px 0;
+  margin: 20px 0;
 }
 
 #container {

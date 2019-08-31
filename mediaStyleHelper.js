@@ -152,15 +152,17 @@ export function ensureColors (backgroundColor, foregroundColor) {
     }
   }
   if (!ok) {
-    secondary = findContrastColor(foregroundColor, backgroundColor, !backgroundLight)
+    secondary = backgroundLight
+      ? findContrastColor(foregroundColor, backgroundColor)
+      : findContrastColorAgainstDark(foregroundColor, backgroundColor)
     if (backgroundLight) {
-      const hsl = convert.hex2hsl(secondary)
-      hsl[2] = hsl[2] - 20 >= 0 ? hsl[2] - 20 : 0
-      primary = convert.hsl2hex(hsl[0], hsl[1], hsl[2])
+      const lab = convert.hex2lab(secondary)
+      lab[0] = lab[0] - 20 > 0 ? lab[0] - 20 : 0
+      primary = lab2hex(lab[0], lab[1], lab[2])
     } else {
-      const hsl = convert.hex2hsl(secondary)
-      hsl[2] = hsl[2] + 10 <= 100 ? hsl[2] + 10 : 100
-      primary = convert.hsl2hex(hsl[0], hsl[1], hsl[2])
+      const lab = convert.hex2lab(secondary)
+      lab[0] = lab[0] + 10 < 100 ? lab[0] + 10 : 100
+      primary = lab2hex(lab[0], lab[1], lab[2])
     }
   }
   return {
@@ -170,27 +172,50 @@ export function ensureColors (backgroundColor, foregroundColor) {
   }
 }
 
-export function findContrastColor (foregroundColor, backgroundColor, light) {
+export function lab2hex (l, a, b) {
+  let rgb = convert.lab2rgb(l, a, b)
+  for (let i = 0; i < 3; i++) {
+    if (rgb[i] < 0) {
+      rgb[i] = 0
+    }
+    if (rgb[i] > 100) {
+      rgb[i] = 100
+    }
+  }
+  return convert.rgb2hex(rgb[0], rgb[1], rgb[2])
+}
+
+export function findContrastColor (foregroundColor, backgroundColor) {
+  const lab = convert.hex2lab(foregroundColor.getHex())
+  let low = 0
+  let high = lab[0]
+  let color = foregroundColor.getHex()
+  for (let i = 0; i < 15 && high - low > 0.00001; i++) {
+    const l = (low + high) / 2
+    lab[0] = l
+    color = lab2hex(lab[0], lab[1], lab[2])
+    if (convert.hex2contrast(color, backgroundColor.getHex()) > 4.5) {
+      low = l
+    } else {
+      high = l
+    }
+  }
+  return color
+}
+
+export function findContrastColorAgainstDark (foregroundColor, backgroundColor) {
   const hsl = convert.hex2hsl(foregroundColor.getHex())
-  let low = light ? hsl[2] : 0
-  let high = light ? 1 : hsl[2]
+  let low = hsl[2]
+  let high = 100
   let color = foregroundColor.getHex()
   for (let i = 0; i < 15 && high - low > 0.00001; i++) {
     const l = (low + high) / 2
     hsl[2] = l
     color = convert.hsl2hex(hsl[0], hsl[1], hsl[2])
     if (convert.hex2contrast(color, backgroundColor.getHex()) > 4.5) {
-      if (light) {
-        high = l
-      } else {
-        low = l
-      }
+      high = l
     } else {
-      if (light) {
-        low = l
-      } else {
-        high = l
-      }
+      low = l
     }
   }
   return color
