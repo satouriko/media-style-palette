@@ -21,7 +21,7 @@ export class MediaStylePalette {
     }
     this.option = Object.assign({
       maxDimension: 150,
-      direction: 180
+      direction: -90
     }, this.option, option)
     if (typeof this.option.maxDimension !== 'number') {
       throw new TypeError('maxDimension is not a number')

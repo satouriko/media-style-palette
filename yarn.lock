@@ -5904,7 +5904,7 @@ node-releases@^1.1.25:
   dependencies:
     semver "^5.3.0"
 
-node-vibrant@^3.1.4:
+node-vibrant@~3.1.4:
   version "3.1.4"
   resolved "https://registry.npmjs.org/node-vibrant/-/node-vibrant-3.1.4.tgz#6d3ec01bb5e3e45f05cd6d81e1ed7da3d429f594"
   integrity sha512-6z33ItA+hKW96kV/qRxxJraHlLacB0vlGW8QKKbYYIiMs0pZxeMNl2iEnR6ZepqD86PnmWCnKGHxzndBaZoc8g==
