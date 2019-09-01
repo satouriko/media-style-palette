@@ -61,6 +61,7 @@ export class MediaStylePalette {
     const url = this.canvas.toDataURL()
     let palette = await Vibrant.from(url)
       .maxDimension(this.option.maxDimension)
+      .clearFilters()
       .getPalette()
     const backgroundColor = findBackgroundColor(palette)
     palette = await Vibrant.from(url)

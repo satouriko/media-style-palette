@@ -8,6 +8,7 @@ The code in [Media-Style-Palette](https://github.com/mkaflowski/Media-Style-Pale
 exactly used in Android Oreo (see demonstration in its README).
 But according to the implementation of quantizer and scale down factor used in downsampling stage,
 the output of this program may be somehow differ from the media notification of Android Oreo.
+Note that the result could also be different across different browsers.
 
 Take a live demo at [media-style-palette.js.org](https://media-style-palette.js.org/).
 
