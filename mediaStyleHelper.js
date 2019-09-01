@@ -1,47 +1,64 @@
 import * as convert from '@csstools/convert-colors'
 import { Color } from './color'
 
-export function findBackgroundColor (palette) {
+export function getSortedPaletteKeys (palette) {
   const ids = []
   for (const sw in palette) {
     if (palette.hasOwnProperty(sw)) {
       ids.push(sw)
     }
   }
-  ids.sort((a, b) => (palette[b].getPopulation() - palette[a].getPopulation()))
-  if (!isBlackOrWhite(palette[ids[0]])) {
-    return palette[ids[0]]
+  ids.sort((a, b) => {
+    if (palette[a] === null && palette[b] === null) {
+      return 0
+    } else if (palette[a] === null) {
+      return palette[b].getPopulation()
+    } else if (palette[b] === null) {
+      return palette[a].getPopulation()
+    }
+    return palette[b].getPopulation() - palette[a].getPopulation()
+  })
+  return ids
+}
+
+export function findBackgroundColor (palette) {
+  const ids = getSortedPaletteKeys(palette)
+  if (palette[ids[0]] === null) {
+    return '#fff'
+  }
+  if (!isBlackOrWhite(palette[ids[0]].getHsl())) {
+    return palette[ids[0]].getHex()
   }
   let highestNoneWhite
   for (const id of ids) {
-    if (!isBlackOrWhite(palette[id])) {
+    if (palette[id] && !isBlackOrWhite(palette[id].getHsl())) {
       highestNoneWhite = id
       break
     }
   }
   if (!highestNoneWhite ||
     palette[ids[0]].getPopulation() > 2.5 * palette[highestNoneWhite].getPopulation()) {
-    return palette[ids[0]]
+    return palette[ids[0]].getHex()
   }
-  return palette[highestNoneWhite]
+  return palette[highestNoneWhite].getHex()
 }
 
-export function isWhite (color) {
-  return color.getHsl()[2] >= 0.9
+export function isWhite (hsl) {
+  return hsl[2] >= 0.9
 }
 
-export function isBlack (color) {
-  return color.getHsl()[2] <= 0.08
+export function isBlack (hsl) {
+  return hsl[2] <= 0.08
 }
 
-export function isBlackOrWhite (color) {
-  return isWhite(color) || isBlack(color)
+export function isBlackOrWhite (hsl) {
+  return isWhite(hsl) || isBlack(hsl)
 }
 
 export function selectForegroundColor (
   moreVibrant, vibrant,
   moreMuted, muted,
-  dominant, mapSize
+  dominant, fallback, mapSize
 ) {
   let candidate = selectVibrantCandidate(moreVibrant, vibrant, mapSize)
   if (!candidate) {
@@ -49,42 +66,38 @@ export function selectForegroundColor (
   }
   if (candidate) {
     if (candidate.getHex() === dominant.getHex()) {
-      return candidate
+      return candidate.getHex()
     } else if (candidate.getPopulation() < dominant.getPopulation() * 0.01 &&
       dominant.getHsl()[1] > 0.19) {
-      return dominant
+      return dominant.getHex()
     } else {
-      return candidate
+      return candidate.getHex()
     }
+  } else if (hasEnoughPopulation(dominant, mapSize)) {
+    return dominant.getHex()
   }
-  return dominant
+  return fallback
 }
 
 export function findForegroundColor (backgroundColor, palette, mapSize) {
-  const ids = []
-  for (const sw in palette) {
-    if (palette.hasOwnProperty(sw)) {
-      ids.push(sw)
-    }
-  }
-  ids.sort((a, b) => (palette[b].getPopulation() - palette[a].getPopulation()))
+  const ids = getSortedPaletteKeys(palette)
   if (isColorLight(backgroundColor)) {
     return selectForegroundColor(
       palette.DarkVibrant, palette.Vibrant,
       palette.DarkMuted, palette.Muted,
-      palette[ids[0]], mapSize
+      palette[ids[0]], '#000', mapSize
     )
   } else {
     return selectForegroundColor(
       palette.LightVibrant, palette.Vibrant,
       palette.LightMuted, palette.Muted,
-      palette[ids[0]], mapSize
+      palette[ids[0]], '#fff', mapSize
     )
   }
 }
 
 export function isColorLight (color) {
-  const xyz = convert.hex2xyz(color.getHex())
+  const xyz = convert.hex2xyz(color)
   return xyz[1] > 50
 }
 
@@ -124,30 +137,30 @@ export function selectMutedCandidate (first, second, mapSize) {
 }
 
 export function hasEnoughPopulation (color, mapSize) {
-  return color.getPopulation() > mapSize * 0.002
+  return color && color.getPopulation() > mapSize * 0.002
 }
 
 export function ensureColors (backgroundColor, foregroundColor) {
-  const backY = convert.hex2xyz(backgroundColor.getHex())[1]
-  const foreY = convert.hex2xyz(foregroundColor.getHex())[1]
-  const contrast = convert.hex2contrast(backgroundColor.getHex(), foregroundColor.getHex())
+  const backY = convert.hex2xyz(backgroundColor)[1]
+  const foreY = convert.hex2xyz(foregroundColor)[1]
+  const contrast = convert.hex2contrast(backgroundColor, foregroundColor)
   let backgroundLight =
-    (backY > foreY && convert.hex2contrast(backgroundColor.getHex(), '#000') > 4.5) ||
-    (backY < foreY && convert.hex2contrast(backgroundColor.getHex(), '#fff') <= 4.5)
+    (backY > foreY && convert.hex2contrast(backgroundColor, '#000') > 4.5) ||
+    (backY < foreY && convert.hex2contrast(backgroundColor, '#fff') <= 4.5)
   let primary, secondary
   let ok = false
   if (contrast > 4.5) {
-    primary = foregroundColor.getHex()
+    primary = foregroundColor
     if (backgroundLight) {
-      const hsl = convert.hex2hsl(primary)
-      hsl[2] = hsl[2] + 20 <= 100 ? hsl[2] + 20 : 100
-      secondary = convert.hsl2hex(hsl[0], hsl[1], hsl[2])
+      const lab = convert.hex2lab(primary)
+      lab[0] = lab[0] + 20 <= 100 ? lab[0] + 20 : 100
+      secondary = lab2hex(lab[0], lab[1], lab[2])
     } else {
-      const hsl = convert.hex2hsl(primary)
-      hsl[2] = hsl[2] - 10 >= 0 ? hsl[2] - 10 : 0
-      secondary = convert.hsl2hex(hsl[0], hsl[1], hsl[2])
+      const lab = convert.hex2lab(primary)
+      lab[0] = lab[0] - 10 >= 0 ? lab[0] - 10 : 0
+      secondary = lab2hex(lab[0], lab[1], lab[2])
     }
-    if (convert.hex2contrast(backgroundColor.getHex(), secondary) > 4.5) {
+    if (convert.hex2contrast(backgroundColor, secondary) > 4.5) {
       ok = true
     }
   }
@@ -168,7 +181,7 @@ export function ensureColors (backgroundColor, foregroundColor) {
   return {
     primaryColor: Color.fromHex(primary),
     secondaryColor: Color.fromHex(secondary),
-    backgroundColor: Color.fromHex(backgroundColor.getHex())
+    backgroundColor: Color.fromHex(backgroundColor)
   }
 }
 
@@ -186,15 +199,15 @@ export function lab2hex (l, a, b) {
 }
 
 export function findContrastColor (foregroundColor, backgroundColor) {
-  const lab = convert.hex2lab(foregroundColor.getHex())
+  const lab = convert.hex2lab(foregroundColor)
   let low = 0
   let high = lab[0]
-  let color = foregroundColor.getHex()
+  let color = foregroundColor
   for (let i = 0; i < 15 && high - low > 0.00001; i++) {
     const l = (low + high) / 2
     lab[0] = l
     color = lab2hex(lab[0], lab[1], lab[2])
-    if (convert.hex2contrast(color, backgroundColor.getHex()) > 4.5) {
+    if (convert.hex2contrast(color, backgroundColor) > 4.5) {
       low = l
     } else {
       high = l
@@ -204,15 +217,15 @@ export function findContrastColor (foregroundColor, backgroundColor) {
 }
 
 export function findContrastColorAgainstDark (foregroundColor, backgroundColor) {
-  const hsl = convert.hex2hsl(foregroundColor.getHex())
+  const hsl = convert.hex2hsl(foregroundColor)
   let low = hsl[2]
   let high = 100
-  let color = foregroundColor.getHex()
+  let color = foregroundColor
   for (let i = 0; i < 15 && high - low > 0.00001; i++) {
     const l = (low + high) / 2
     hsl[2] = l
     color = convert.hsl2hex(hsl[0], hsl[1], hsl[2])
-    if (convert.hex2contrast(color, backgroundColor.getHex()) > 4.5) {
+    if (convert.hex2contrast(color, backgroundColor) > 4.5) {
       high = l
     } else {
       low = l

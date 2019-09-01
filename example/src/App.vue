@@ -78,7 +78,14 @@
           </p>
         </div>
       </div>
-      <img alt="" :src="imgSrc" ref="img" />
+      <img class="img" alt="Failed to load image" :src="imgSrc" ref="img"
+           :style="`display: ${imgSrc ? 'block' : 'none'}`"
+      />
+      <div class="img" :style="`display: ${imgSrc ? 'none' : 'flex'}`">
+        This is the demo for <br/>
+        <a href="https://github.com/rikakomoe/Media-Style-Palette" target="_blank">Media-Style-Palette</a><br/>
+        Please select an image.
+      </div>
     </div>
   </div>
 </template>
@@ -168,6 +175,12 @@ export default Vue.extend({
 </script>
 
 <style>
+body {
+  margin: 0;
+  min-width: 780px;
+  min-height: 850px;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -211,13 +224,16 @@ table tr th, td {
   width: 20px;
 }
 
-img {
-  display: block;
+.img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin: 256px auto;
   width: 256px;
   height: 256px;
   z-index: 2;
   position: relative;
+  text-align: center;
 }
 
 .active {

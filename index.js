@@ -1,6 +1,6 @@
 import * as Vibrant from 'node-vibrant'
-import { ensureColors, findBackgroundColor, findForegroundColor } from './mediaStyleHelper'
-import * as convert from '@csstools/convert-colors'
+import { ensureColors, findBackgroundColor, findForegroundColor, isBlackOrWhite } from './mediaStyleHelper'
+import { Color } from './color'
 
 export class MediaStylePalette {
   imgSrc
@@ -65,10 +65,14 @@ export class MediaStylePalette {
     const backgroundColor = findBackgroundColor(palette)
     palette = await Vibrant.from(url)
       .addFilter((r, g, b) => {
-        const hsl = convert.rgb2hsl(r, g, b)
-        const bgHsl = convert.hex2hsl(backgroundColor.getHex())
-        const diff = Math.abs(hsl[0] - bgHsl[0])
+        const color = Color.fromRgb(r, g, b)
+        const bgColor = Color.fromHex(backgroundColor)
+        const diff = Math.abs(color.hsl[0] - bgColor.hsl[0])
         return diff > 10 && diff < 350
+      })
+      .addFilter((r, g, b) => {
+        const color = Color.fromRgb(r, g, b)
+        return !isBlackOrWhite(color.hsl)
       })
       .maxDimension(this.option.maxDimension)
       .getPalette()
