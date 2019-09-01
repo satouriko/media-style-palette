@@ -1,6 +1,6 @@
 {
   "name": "media-style-palette",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Determine primary, secondary text color and background color from artworks. ",
   "main": "index.js",
   "scripts": {
