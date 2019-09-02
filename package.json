@@ -1,9 +1,10 @@
 {
   "name": "media-style-palette",
   "version": "1.0.3",
-  "description": "Determine primary, secondary text color and background color from artworks. ",
-  "main": "dist/media-style-palette.min.js",
-  "module": "index.js",
+  "description": "Determine primary, secondary text color and background color from artworks.",
+  "main": "./dist/media-style-palette.min.js",
+  "module": "./src/index.js",
+  "types": "./src/index.d.ts",
   "scripts": {
     "start": "vue-cli-service serve",
     "lint": "vue-cli-service lint",

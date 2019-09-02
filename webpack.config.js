@@ -4,7 +4,7 @@ const pkg = require('./package.json')
 
 module.exports = {
   mode: 'production',
-  entry: path.join(__dirname, 'index.js'),
+  entry: path.join(__dirname, 'src', 'index.js'),
   output: {
     library: 'MediaStylePalette',
     libraryTarget: 'umd',
@@ -29,5 +29,6 @@ module.exports = {
 @license ${pkg.license}
 @author ${pkg.author}
 `)
-  ]
+  ],
+  devtool: 'source-map'
 }
