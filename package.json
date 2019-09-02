@@ -2,17 +2,21 @@
   "name": "media-style-palette",
   "version": "1.0.2",
   "description": "Determine primary, secondary text color and background color from artworks. ",
-  "main": "index.js",
+  "main": "dist/media-style-palette.min.js",
+  "module": "index.js",
   "scripts": {
     "start": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "version": "webpack && git add dist"
   },
   "dependencies": {
     "@csstools/convert-colors": "^2.0.0",
     "node-vibrant": "~3.1.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-plugin-typescript": "^3.11.0",
@@ -20,6 +24,7 @@
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/eslint-config-typescript": "^4.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
     "core-js": "^2.6.5",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
@@ -27,7 +32,9 @@
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
   },
   "repository": {
     "type": "git",

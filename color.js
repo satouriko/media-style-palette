@@ -1,8 +1,6 @@
 import * as convert from '@csstools/convert-colors'
 
 export class Color {
-  _rgb
-
   static fromRgb (r, g, b) {
     const color = new Color()
     color._rgb = [r, g, b]

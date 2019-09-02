@@ -3,10 +3,6 @@ import { ensureColors, findBackgroundColor, findForegroundColor, isBlackOrWhite 
 import { Color } from './color'
 
 export class MediaStylePalette {
-  imgSrc
-  palette
-  ref
-
   constructor (option) {
     this.use(option)
     this.canvas = document.createElement('canvas')
@@ -84,4 +80,5 @@ export class MediaStylePalette {
   }
 }
 
+export { Color }
 export default MediaStylePalette
