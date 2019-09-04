@@ -3,20 +3,24 @@
   "version": "1.0.4",
   "description": "Determine primary, secondary text color and background color from artworks.",
   "main": "./dist/media-style-palette.min.js",
-  "module": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "module": "./dist/media-style-palette.esm.js",
+  "types": "./index.d.ts",
   "scripts": {
     "start": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
     "build": "vue-cli-service build",
-    "version": "webpack && git add dist"
+    "version": "rollup -c && webpack && git add dist"
   },
   "dependencies": {
+    "@babel/runtime": "^7.5.5",
     "@csstools/convert-colors": "^2.0.0",
     "node-vibrant": "~3.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-async-to-generator": "^7.5.0",
+    "@babel/plugin-transform-regenerator": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
@@ -29,6 +33,10 @@
     "core-js": "^2.6.5",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "rollup": "^1.20.3",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "typescript": "^3.4.3",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
