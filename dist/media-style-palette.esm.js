@@ -1,7 +1,7 @@
 /*!
  * media-style-palette - Determine primary, secondary text color and background color from artworks.
  * --------
- * @version 1.0.4
+ * @version 1.0.5
  * @homepage: https://github.com/rikakomoe/Media-Style-Palette#readme
  * @license MIT
  * @author rikakomoe
