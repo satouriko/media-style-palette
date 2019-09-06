@@ -126,13 +126,11 @@ export default Vue.extend({
   },
   methods: {
     setActive (position: 'left' | 'right' | 'top' | 'bottom') {
-      for (const k in this.colors) {
-        if (this.colors.hasOwnProperty(k)) {
-          if (k === position) {
-            this.$set(this.colors[k], 'active', 'active')
-          } else {
-            this.$set(this.colors[k as 'left' | 'right' | 'top' | 'bottom'], 'active', '')
-          }
+      for (const k of Object.keys(this.colors)) {
+        if (k === position) {
+          this.$set(this.colors[k], 'active', 'active')
+        } else {
+          this.$set(this.colors[k as 'left' | 'right' | 'top' | 'bottom'], 'active', '')
         }
       }
     },

@@ -2,12 +2,7 @@ import * as convert from '@csstools/convert-colors'
 import { Color } from './color'
 
 export function getSortedPaletteKeys (palette) {
-  const ids = []
-  for (const sw in palette) {
-    if (palette.hasOwnProperty(sw)) {
-      ids.push(sw)
-    }
-  }
+  const ids = Object.keys(palette)
   ids.sort((a, b) => {
     if (palette[a] === null && palette[b] === null) {
       return 0
